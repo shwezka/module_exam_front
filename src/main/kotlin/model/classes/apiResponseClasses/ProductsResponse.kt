@@ -23,7 +23,7 @@ fun ProductsResponse.toProductClass(): ProductClass {
         price = price,
         volume = volume,
         detail = detail,
-        image = image,
+        image = "images/prods/${image}.png",
         nutritions = nutritions,
         amount = 0
     )

@@ -15,8 +15,10 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import model.api.ApiConnector
 import model.classes.CategoryClass
+import model.classes.ProductClass
 import view.cartScreen.CartScreen
 import view.categoryScreen.CategoryScreen
+import view.fullProdPage.FullProdPage
 import view.mainScren.MainScreen
 
 @Composable
@@ -24,9 +26,11 @@ import view.mainScren.MainScreen
 fun App() {
     val api = remember { ApiConnector() }
     var categories by remember { mutableStateOf<List<CategoryClass>?>(null) }
+    var prods by remember{mutableStateOf<List<ProductClass>?>(null) }
 
     LaunchedEffect(Unit) {
         categories = api.fetchCategories()
+        prods = api.fetchProducts(1)
     }
 
     MaterialTheme {
@@ -41,9 +45,21 @@ fun App() {
 
                 categories!!.isNotEmpty() -> {
                     // Когда данные загружены
-                    CategoryScreen(
-                        api = api,
-                        category = categories!![5]
+//                    CategoryScreen(
+//                        api = api,
+//                        category = categories!![5]
+//                    )
+                    FullProdPage(
+                        product = prods?.get(1) ?: ProductClass(
+                            productuid = 0,
+                            name = "TODO()",
+                            price = 1.0F,
+                            volume = "",
+                            detail = "",
+                            image = "images/prods/ph.png",
+                            nutritions = "",
+                            amount = 1
+                        )
                     )
                 }
 

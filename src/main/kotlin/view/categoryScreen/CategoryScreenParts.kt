@@ -87,7 +87,7 @@ fun ProductCard(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource("images/prods/${product.image}.png"),
+                    painter = painterResource(product.image),
                     contentDescription = null,
                     modifier = Modifier.size(200.dp)
                 )
