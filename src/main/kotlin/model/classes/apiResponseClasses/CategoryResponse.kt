@@ -15,7 +15,7 @@ fun CategoryResponse.toCategory(): CategoryClass {
     return CategoryClass(
         catId = categoryuid,
         name = name,
-        backColor = getRandomCategoryColor(), // или что-то динамическое
+        backColor = getRandomCategoryColor(),
         borderColor = getRandomCategoryBorderColor(),
         image = "images/catImages/$image.png"
     )

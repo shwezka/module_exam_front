@@ -47,5 +47,6 @@ val textFieldBackground = Color(0xFFF2F3F2)
 val textColor = Color(0xFF4C4F4D)
 val green = Color(0xFF53B175)
 val textCardColor = Color(0xFF181725)
+val white = Color(0xFFFFFFFF)
 
 val gray = Color(0xFFB3B3B3)
