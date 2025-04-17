@@ -55,7 +55,7 @@ class ApiConnector {
 
         client.close()
     }
-    suspend fun fetchCartItems(): List<CartItemResponse> {
+    suspend fun fetchCartItems(): List<ProductClass> {
         val client = HttpClient {
             install(ContentNegotiation) {
                 json(Json {
@@ -65,9 +65,36 @@ class ApiConnector {
             }
         }
 
-        val items: List<CartItemResponse> = client.get("http://localhost:3000/card?useruid=1").body()
-
+        val res: List<CartItemResponse> = client.get("http://localhost:3000/card?useruid=1").body()
+        val items = res.map {it.toProduct()}
         client.close()
         return items
+    }
+
+    suspend fun addToFavs(useruid: Int = 1, productuid: Int) {
+        val client = HttpClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
+        val response: HttpResponse = client.post("http://localhost:3000/favorite") {
+            contentType(ContentType.Application.Json)
+            setBody(FavRequest(useruid, productuid))
+        }
+
+        val responseText = response.bodyAsText()
+        println("Ответ сервера: $responseText")
+
+        client.close()
+    }
+    suspend fun getFavs(useruid: Int = 1): List<ProductClass> {
+        val response: List<ProductsResponse> = client.get("$connection/favorite?useruid=$useruid").body()
+        println(response)
+        return response.map { it.toProductClass() }
     }
 }

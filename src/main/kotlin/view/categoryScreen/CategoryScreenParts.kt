@@ -5,13 +5,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import model.api.ApiConnector
 import model.classes.CategoryClass
 import model.classes.ProductClass
 import theme.*
@@ -60,7 +62,11 @@ fun CategoryControls(
 fun ProductCard(
     product: ProductClass,
     onClick: () -> Unit,
+    api: ApiConnector
 ) {
+    var addToCart by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
     Card(
         modifier = Modifier
             .height(400.dp)
@@ -115,7 +121,14 @@ fun ProductCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        scope.launch {
+                            api.addToCart(
+                                productuid = product.productuid,
+                                count = 1
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .height(100.dp)
                         .width(50.dp),

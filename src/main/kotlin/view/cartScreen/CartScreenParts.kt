@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import model.api.ApiConnector
 import model.classes.ProductClass
 import theme.gray
 import theme.green
@@ -16,10 +18,13 @@ import theme.green
 @Composable
 fun CartElement(
     product: ProductClass,
+    api: ApiConnector
 ) {
     var amount by remember { mutableStateOf(product.amount) }
     val isMinusActive = amount > 1
-    println(amount)
+
+    val scope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,9 +56,21 @@ fun CartElement(
         AmountControls(
             onMinusButtonClick = {
                 amount--
+                scope.launch {
+                    api.addToCart(
+                        productuid = product.productuid,
+                        count = amount,
+                    )
+                }
             },
             onPlusButtonClick = {
                 amount++
+                scope.launch {
+                    api.addToCart(
+                        productuid = product.productuid,
+                        count = amount,
+                    )
+                }
             },
             isMinusActive = isMinusActive
         )
@@ -66,8 +83,16 @@ fun CartElement(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             IconButton(
-                onClick = { },
+                onClick = {
+                    scope.launch {
+                        api.addToCart(
+                            productuid = product.productuid,
+                            count = 0
+                        )
+                    }
+                },
             ) {
                 Icon(
                     painter = painterResource("images/controls/delete.svg"),
@@ -78,7 +103,7 @@ fun CartElement(
                 )
             }
             Text(
-                text = "$${product.price}",
+                text = "$${product.price*amount}",
             )
         }
     }

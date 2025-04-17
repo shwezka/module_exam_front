@@ -15,6 +15,7 @@ import model.classes.CategoryClass
 import model.classes.ProductClass
 import model.classes.apiResponseClasses.CartItemResponse
 import view.BottomBar
+import view.FavList
 import view.NavigationManager
 import view.cartScreen.CartScreen
 import view.categoryScreen.CategoryScreen
@@ -25,7 +26,8 @@ enum class Screens {
     MAIN,
     CATEGORY,
     PRODUCT,
-    CART
+    CART,
+    FAVORITE
 }
 
 
@@ -37,7 +39,7 @@ fun App() {
 
     var categories by remember { mutableStateOf<List<CategoryClass>?>(null) }
     var prods by remember { mutableStateOf<List<ProductClass>?>(null) }
-    var cart by remember { mutableStateOf<List<CartItemResponse>?>(null) }
+    var cart by remember { mutableStateOf<List<ProductClass>?>(null) }
 
     // Загружаем категории при старте
     LaunchedEffect(Unit) {
@@ -103,6 +105,7 @@ fun App() {
                 }
 
                 Screens.CART -> CartScreen(api)
+                Screens.FAVORITE -> FavList(api)
             }
         }
     }

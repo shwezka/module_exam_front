@@ -24,7 +24,7 @@ import theme.green
 @Composable
 fun CartScreen(api: ApiConnector) {
 
-    var cart by remember { mutableStateOf<List<CartItemResponse>?>(null) }
+    var cart by remember { mutableStateOf<List<ProductClass>?>(null) }
 
     // Загружаем cart каждый раз при заходе на экран
     LaunchedEffect(Unit) {
@@ -53,7 +53,10 @@ fun CartScreen(api: ApiConnector) {
         LazyColumn {
             itemsIndexed(cart!!) { _, cart ->
                 Divider(color = Color.Gray)
-                CartElement(cart.product.toProductClass().copy(amount = cart.count))
+                CartElement(
+                    cart,
+                    api = api
+                )
             }
         }
         Divider(color = Color.Gray)

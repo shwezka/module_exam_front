@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import model.api.ApiConnector
 import model.classes.ProductClass
 import theme.gray
@@ -23,7 +24,7 @@ import view.NavigationManager
 @Composable
 fun ImageDisplay(
     image: String,
-){
+) {
     Row(
         modifier = Modifier
             .height(300.dp)
@@ -35,11 +36,11 @@ fun ImageDisplay(
                     topEnd = 0.dp,
                     bottomStart = 10.dp,
                     bottomEnd = 10.dp
-                    )
+                )
             ),
 
-    ){
-        Box(){
+        ) {
+        Box() {
             Controls()
             Image(
                 painter = painterResource(image),
@@ -53,13 +54,13 @@ fun ImageDisplay(
 }
 
 @Composable
-fun Controls(){
+fun Controls() {
     Row(
         modifier = Modifier
             .padding(10.dp)
-    ){
+    ) {
         IconButton(
-            onClick = {NavigationManager.goBack()},
+            onClick = { NavigationManager.goBack() },
             modifier = Modifier,
         ) {
             Icon(
@@ -124,21 +125,15 @@ fun AmountControls(
 fun InfoComponent(
     product: ProductClass,
     api: ApiConnector
-){
+) {
     var amount by remember { mutableStateOf(product.amount) }
-    var addToCart by remember { mutableStateOf(false) }
 
-    LaunchedEffect(addToCart){
-        api.addToCart(
-            productuid = product.productuid,
-            count = amount
-        )
-    }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -176,7 +171,13 @@ fun InfoComponent(
                 verticalArrangement = Arrangement.Center
             ) {
                 IconButton(
-                    onClick = {},
+                    onClick = {
+                        scope.launch {
+                            api.addToFavs(
+                                productuid = product.productuid
+                            )
+                        }
+                    },
                 ) {
                     Icon(
                         painter = painterResource("images/controls/fav.svg"),
@@ -189,8 +190,8 @@ fun InfoComponent(
             }
         }
         Divider()
-        Row(){
-            Column{
+        Row() {
+            Column {
                 Text(
                     text = "Product detail",
                 )
@@ -203,7 +204,7 @@ fun InfoComponent(
         }
         Divider()
         Row {
-            Column{
+            Column {
                 Text(
                     text = "Nutrients",
                 )
@@ -216,12 +217,17 @@ fun InfoComponent(
         }
         Button(
             onClick = {
-               addToCart = !addToCart
+                scope.launch {
+                    api.addToCart(
+                        productuid = product.productuid,
+                        count = amount
+                    )
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = green,
             )
-        ){
+        ) {
             Text(
                 text = "Добавить в корзину",
                 color = white,

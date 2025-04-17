@@ -75,6 +75,7 @@ fun CategoryScreen(
                         NavigationManager.navigateToProduct(prod)
                         println(prod)
                     },
+                    api = api,
                 )
             }
         }

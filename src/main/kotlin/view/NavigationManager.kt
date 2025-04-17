@@ -45,6 +45,10 @@ object NavigationManager {
         navigateTo(Screens.MAIN)
     }
 
+    fun navigateToFavs() {
+        navigateTo(Screens.FAVORITE)
+    }
+
 
     fun goBack() {
         navigateTo(Screens.MAIN)
@@ -77,7 +81,9 @@ fun BottomBar() {
                     contentDescription = null,
                 )
             }
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                NavigationManager.navigateToFavs()
+            }) {
                 Icon(
                     painterResource("images/bottomBar/bookmark.svg"),
                     contentDescription = null,
