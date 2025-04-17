@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import model.api.ApiConnector
 import model.classes.ProductClass
 import theme.background
 
 @Composable
 fun FullProdPage(
-    product: ProductClass
+    product: ProductClass,
+    api: ApiConnector
 ) {
     Column(
         modifier = Modifier
@@ -30,6 +32,9 @@ fun FullProdPage(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         ImageDisplay(product.image)
-        InfoComponent(product)
+        InfoComponent(
+            product,
+            api
+        )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.window.application
 import model.api.ApiConnector
 import model.classes.CategoryClass
 import model.classes.ProductClass
+import model.classes.apiResponseClasses.CartItemResponse
 import view.BottomBar
 import view.NavigationManager
 import view.cartScreen.CartScreen
@@ -36,10 +37,12 @@ fun App() {
 
     var categories by remember { mutableStateOf<List<CategoryClass>?>(null) }
     var prods by remember { mutableStateOf<List<ProductClass>?>(null) }
+    var cart by remember { mutableStateOf<List<CartItemResponse>?>(null) }
 
     // Загружаем категории при старте
     LaunchedEffect(Unit) {
         categories = api.fetchCategories()
+        cart = api.fetchCartItems()
     }
 
     // Загружаем продукты при изменении selectedCategoryId
@@ -87,7 +90,10 @@ fun App() {
 
                         val product = NavigationManager.selectedProduct.value
                         if (product != null) {
-                            FullProdPage(product = product)
+                            FullProdPage(
+                                product = product,
+                                api = api,
+                            )
                         } else {
                             ErrorScreen("Продукт не найден")
                         }
@@ -96,7 +102,7 @@ fun App() {
                     }
                 }
 
-                Screens.CART -> CartScreen()
+                Screens.CART -> CartScreen(api)
             }
         }
     }

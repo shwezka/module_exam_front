@@ -3,7 +3,6 @@ package view.fullProdPage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,13 +12,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import model.api.ApiConnector
 import model.classes.ProductClass
 import theme.gray
 import theme.green
 import theme.textFieldBackground
 import theme.white
 import view.NavigationManager
-import view.cartScreen.products
 
 @Composable
 fun ImageDisplay(
@@ -123,9 +122,19 @@ fun AmountControls(
 
 @Composable
 fun InfoComponent(
-    product: ProductClass
+    product: ProductClass,
+    api: ApiConnector
 ){
     var amount by remember { mutableStateOf(product.amount) }
+    var addToCart by remember { mutableStateOf(false) }
+
+    LaunchedEffect(addToCart){
+        api.addToCart(
+            productuid = product.productuid,
+            count = amount
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -206,7 +215,9 @@ fun InfoComponent(
             }
         }
         Button(
-            onClick = {},
+            onClick = {
+               addToCart = !addToCart
+            },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = green,
             )

@@ -1,6 +1,6 @@
 package view.cartScreen
 
-import androidx.compose.foundation.HorizontalScrollbar
+import LoadingScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,57 +9,33 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import model.api.ApiConnector
 import model.classes.ProductClass
+import model.classes.apiResponseClasses.CartItemResponse
+import model.classes.apiResponseClasses.toProductClass
 import theme.background
 import theme.green
 
-val products = listOf(
-    ProductClass(
-        name = "Болгарский перец",
-        price = 4.99F,
-        volume = "1kg",
-        detail = "",
-        image = "images/cart/pepper.png",
-        nutritions = "100gr",
-        amount = 2,
-    ),
-    ProductClass(
-        name = "Куриные яйца",
-        price = 1.99F,
-        volume = "4pcs",
-        detail = "",
-        image = "images/cart/eggs.png",
-        nutritions = "100gr",
-        amount = 2,
-    ),
-    ProductClass(
-        name = "Бананы",
-        price = 2.99F,
-        volume = "12kg",
-        detail = "",
-        image = "images/cart/banana.png",
-        nutritions = "100gr",
-        amount = 2,
-
-    ),
-    ProductClass(
-        name = "Хрен",
-        price = 2.99F,
-        volume = "250gm",
-        detail = "",
-        image = "images/cart/her.png",
-        nutritions = "100gr",
-        amount = 2,
-    )
-)
-
 @Composable
-fun CartScreen(){
+fun CartScreen(api: ApiConnector) {
+
+    var cart by remember { mutableStateOf<List<CartItemResponse>?>(null) }
+
+    // Загружаем cart каждый раз при заходе на экран
+    LaunchedEffect(Unit) {
+        cart = api.fetchCartItems()
+    }
+
+    if (cart == null) {
+        LoadingScreen()
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,9 +51,9 @@ fun CartScreen(){
     ) {
         ControlsRow()
         LazyColumn {
-            itemsIndexed(products) { _, product ->
+            itemsIndexed(cart!!) { _, cart ->
                 Divider(color = Color.Gray)
-                CartElement(product)
+                CartElement(cart.product.toProductClass().copy(amount = cart.count))
             }
         }
         Divider(color = Color.Gray)
