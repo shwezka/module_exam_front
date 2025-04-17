@@ -13,6 +13,7 @@ import androidx.compose.ui.window.application
 import model.api.ApiConnector
 import model.classes.CategoryClass
 import model.classes.ProductClass
+import view.BottomBar
 import view.NavigationManager
 import view.cartScreen.CartScreen
 import view.categoryScreen.CategoryScreen
@@ -47,7 +48,9 @@ fun App() {
     }
 
     MaterialTheme {
-        Scaffold(bottomBar = {}) {
+        Scaffold(bottomBar = {
+            BottomBar()
+        }) {
             when (NavigationManager.currentScreen.value) {
                 Screens.MAIN -> {
                     if (categories == null) {
