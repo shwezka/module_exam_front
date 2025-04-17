@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import model.classes.CategoryClass
 import model.classes.ProductClass
 import theme.*
+import view.NavigationManager
 
 @Composable
 fun CategoryControls(
@@ -25,7 +26,7 @@ fun CategoryControls(
             .fillMaxWidth()
     ) {
         IconButton(
-            onClick = {},
+            onClick = {NavigationManager.goBack()},
             modifier = Modifier,
         ) {
             Icon(

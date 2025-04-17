@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.api.ApiConnector
 import theme.*
-
+import view.NavigationManager
 
 
 @Composable
@@ -70,7 +70,7 @@ fun MainScreen() {
                 val category = categories[index]
                 CategoryCard(
                     category = category,
-                    onClick = {}
+                    onClick = {NavigationManager.navigateToCategory(index)}
                 )
             }
         }

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,6 +18,7 @@ import theme.gray
 import theme.green
 import theme.textFieldBackground
 import theme.white
+import view.NavigationManager
 import view.cartScreen.products
 
 @Composable
@@ -59,7 +60,7 @@ fun Controls(){
             .padding(10.dp)
     ){
         IconButton(
-            onClick = {},
+            onClick = {NavigationManager.goBack()},
             modifier = Modifier,
         ) {
             Icon(
@@ -89,7 +90,7 @@ fun AmountControls(
     onMinusButtonClick: () -> Unit,
     onPlusButtonClick: () -> Unit,
     isMinusActive: Boolean,
-    amount: String,
+    prodAmount: Int,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -103,11 +104,9 @@ fun AmountControls(
                 contentDescription = null,
             )
         }
-
-
         Spacer(modifier = Modifier.width(20.dp))
         Text(
-            text = amount,
+            text = prodAmount.toString(),
         )
         Spacer(modifier = Modifier.width(20.dp))
         IconButton(
@@ -126,6 +125,7 @@ fun AmountControls(
 fun InfoComponent(
     product: ProductClass
 ){
+    var amount by remember { mutableStateOf(product.amount) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -152,13 +152,16 @@ fun InfoComponent(
                     fontSize = 10.sp
                 )
                 AmountControls(
-                    onPlusButtonClick = {},
-                    isMinusActive = false,
-                    onMinusButtonClick = {},
-                    amount = product.amount.toString(),
+                    onPlusButtonClick = {
+                        amount++
+                    },
+                    isMinusActive = amount < 1,
+                    onMinusButtonClick = {
+                        amount--
+                    },
+                    prodAmount = amount,
                 )
             }
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center

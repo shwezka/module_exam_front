@@ -15,6 +15,7 @@ import model.api.ApiConnector
 import model.classes.CategoryClass
 import model.classes.ProductClass
 import theme.background
+import view.NavigationManager
 import view.mainScren.CategoryCard
 import view.mainScren.SearchBar
 
@@ -70,7 +71,10 @@ fun CategoryScreen(
                 val prod = products[index]
                 ProductCard(
                     product = prod,
-                    onClick = { },
+                    onClick = {
+                        NavigationManager.navigateToProduct(prod)
+                        println(prod)
+                    },
                 )
             }
         }
