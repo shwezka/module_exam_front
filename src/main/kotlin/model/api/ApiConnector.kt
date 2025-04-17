@@ -34,23 +34,6 @@ class ApiConnector {
         return response.map { it.toProductClass() }
     }
 
-    //    suspend fun addToCartKtor(productuid: Int, count: Int) {
-//        val client = HttpClient()
-//        val useruid = 1
-//
-//        val response: String = client.submitForm(
-//            url = "http://localhost:3000/card",
-//            formParameters = Parameters.build {
-//                append("useruid", useruid)
-//                append("productuid", productuid)
-//                append("count", count)
-//            }
-//        ).toString()
-//
-//        println("Response: $response")
-//        client.close()
-//    }
-// 2. Функция для отправки POST-запроса
     suspend fun addToCart(useruid: Int = 1, productuid: Int, count: Int) {
         val client = HttpClient {
             install(ContentNegotiation) {
